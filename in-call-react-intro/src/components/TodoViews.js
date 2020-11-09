@@ -1,42 +1,69 @@
 import React from "react";
 import { arrayOf, shape, number, string } from "prop-types";
-const TodoView = ({ todoList }) => {
+import "./TodoViews.css";
+const TodoView = ({
+todoList,
+appHandleDeleteTodo,
+appHandleEditTodo,
+appHandleOnChange,
+editValue,
+disableEditButton,
+appHandleUpdateSubmit,
+}) => {
   //console.log(todoList);
+const todoViewHandleDeleteButton = (id) => {
+    //console.log("ID: ", id);
+    appHandleDeleteTodo(id);
+};
+// const todoViewHandleEditToButton = (id) => {
+// appHandleEditTodo(id);
+// };
 return (
     <ul style={{ listStyle: "none" }}>
-    {todoList.map(({ id, todo }) => {
+    {todoList.map(({ id, todo, editToggle }) => {
         return (
-        <>
-            <li key={id} style={{ margin: 20 }}>
-            {todo}{" "}
+        <li key={id} style={{ margin: 20 }}>
+            {
+              //if editToggle is true show input otherwise show todo
+            editToggle ? (
+                <input
+                type="text"
+                value={editValue}
+                name="editValue"
+                onChange={(event) => appHandleOnChange(event)}
+                  //onChange={appHandleOnChange()}
+                />
+            ) : (
+                <span> {todo}</span>
+            )
+            }
+            {editToggle ? (
+            <span className="todo-button-shared-style edit-button"
+                onClick={() => appHandleUpdateSubmit}
+                >
+                Update
+            </span>
+            ) : (
             <span
-                style={{
-                margin: 10,
-                padding: 5,
-                backgroundColor: "blue",
-                color: "white",
-                borderRadius: 5,
-                }}
+                onClick={() => appHandleEditTodo(id)}
+                className={`todo-button-shared-style edit-button 
+                ${disableEditButton ? "disabled" : ""} `}
             >
                 Edit
             </span>
+            )}
             <span
-                style={{
-                margin: 10,
-                padding: 5,
-                backgroundColor: "red",
-                color: "white",
-                borderRadius: 5,
-                }}
+            onClick={() => todoViewHandleDeleteButton(id)}
+            className={`todo-button-shared-style edit-button 
+            ${disableEditButton ? "disabled" : ""} `}
             >
-                Delete
+            Delete
             </span>
-            </li>
-            </>
+        </li>
         );
-        })}
+    })}
     </ul>
-    );
+);
 };
 // TodoView.propTypes = {
 //   nameString: PropTypes.string.isRequired,
